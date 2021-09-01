@@ -8,7 +8,7 @@ import pymysql
 import psycopg2 as psy
 import math
 
-#配置连接数据库
+#配置连接数据库 在这里修改成自己的数据库相关参宿
 host = 'localhost' #地址
 port = 5432 #端口号
 dbname = 'wbdb'
@@ -85,6 +85,7 @@ def thredg(datalist,thn,functionName):
 def getrespons(fullurl):
     # wbhoturl=fullurl
     # response = requests.get(url=fullurl, timeout=80, proxies=allprox)
+
     try:
         response = requests.get(url=fullurl, timeout=15, proxies=allprox)
         # response = requests.get(url=fullurl, timeout=80)
@@ -278,12 +279,13 @@ if __name__ == '__main__':
             userurl='https://m.weibo.cn/api/container/getIndex?containerid=107603'+str(i)+'&count=25&page='
             counts=getcounts(getrespons(userurl).json())
             try:
-                pages=math.ceil(counts/25)
+                pages=math.ceil(counts/25) #计算总页数
             except:
                 pages=2
             if pages>50:
                 pages=50
             allurl=[]
+            print('该用户共'+str(pages)+'页微博')
             for p in range(1,pages):
                 pageurl=userurl+str(p)
                 allurl.append(pageurl)
@@ -292,7 +294,6 @@ if __name__ == '__main__':
             #存储该用户签到微博数据
             print('共获取到'+str(len(alldata))+'条打卡数据')
             sqlconnect(alldata)
-            print('获取一个用户完成')
             alldata = []
             # time.sleep(120)
         except:

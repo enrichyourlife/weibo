@@ -9,8 +9,15 @@ import psycopg2 as psy
     全局变量
 '''
 
+#配置连接数据库 在这里修改成自己的数据库相关参宿
+host = 'localhost' #地址
+port = 5432 #端口号
+dbname = 'wbdb'
+user = 'postgres' # 用户名
+password = 'root' # 密码
 #代理url
 proxurl='http://webapi.http.zhimacangku.com/getip?num=1&type=2&pro=&city=0&yys=0&port=1&time=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions='
+
 
 #代理服务器
 def prox(data):
@@ -180,7 +187,7 @@ def sqlconnect(datalist):
     n=1
     for i in datalist:
         try:
-            conn = psy.connect(host="localhost", user="postgres", password="root", port=5432, database="wbdb")
+            conn = psy.connect(host=host, user=user, password=password, port=port, database=dbname)
             sqlcmd = "insert into poitb (createdtime,pageurl,mid,mblogtext,reposts,comments,attitudes,userid,usernick,userpageurl,userfans,userfollows,poimsg,poilg,poiwb,poitb,poiid,poiname,lat,lng) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cur = conn.cursor()
             params = (i['createdtim'],i['pagemsgurl'],i['mid'],i['mblogtext'],i['reposts_count'],i['comments_count'],i['attitudes_count'],i['userid']
