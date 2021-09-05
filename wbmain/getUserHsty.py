@@ -8,7 +8,7 @@ import pymysql
 import psycopg2 as psy
 import math
 
-#配置连接数据库 在这里修改成自己的数据库相关参宿
+#配置连接数据库 在这里修改成自己的数据库相关参数
 host = 'localhost' #地址
 port = 5432 #端口号
 dbname = 'wbdb'

@@ -9,7 +9,7 @@ import psycopg2 as psy
     全局变量
 '''
 
-#配置连接数据库 在这里修改成自己的数据库相关参宿
+#配置连接数据库 在这里修改成自己的数据库相关参数
 host = 'localhost' #地址
 port = 5432 #端口号
 dbname = 'wbdb'
@@ -248,4 +248,3 @@ if __name__ == '__main__':
         print('存储完成!')
         print('休眠十分钟后再次获取!')
         time.sleep(600)
-        ##
