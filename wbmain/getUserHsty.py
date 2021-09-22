@@ -275,6 +275,8 @@ if __name__ == '__main__':
     print('共'+str(len(ret))+'位用户准备获取')
     #依次获取每个用户的全部微博数据
     for i in allidlist:
+        alldata = []
+        #每次更换用户就重新清空list
         try:
             userurl='https://m.weibo.cn/api/container/getIndex?containerid=107603'+str(i)+'&count=25&page='
             counts=getcounts(getrespons(userurl).json())
@@ -294,9 +296,7 @@ if __name__ == '__main__':
             #存储该用户签到微博数据
             print('共获取到'+str(len(alldata))+'条打卡数据')
             sqlconnect(alldata)
-            alldata = []
-            # time.sleep(120)
         except:
-            # print('')
+            sqlconnect(alldata)
             time.sleep(10)
             getprox()
