@@ -76,7 +76,7 @@ def getwbmsg(jsondata):
         msgdata = {'createdtim': '', 'pagemsgurl': '', 'mid': '', 'mblogtext': '', 'reposts_count': '',
                    'comments_count': '', 'attitudes_count': '',
                    'userid': '', 'usernick': '', 'userpage': '',  'userfans': '',
-                   'userfollows': '', 'poimsg': '', 'poilg': '',
+                   'userfollows': '','usergender':'', 'poimsg': '', 'poilg': '',
                    'poiwb': '', 'poitb': '', 'poiid': '', 'poiname': '', 'poilat': '', 'poilng': ''}
         mblog = i['card_group'][0]['mblog']
         # 发布时间
@@ -131,6 +131,8 @@ def getwbmsg(jsondata):
             msgdata['userfans']  = userdata['followers_count']
             # 用户关注数量
             msgdata['userfollows']  = userdata['follow_count']
+            # 用户性别
+            msgdata['usergender']  = userdata['gender']
         except:
             print(userdata)
         ###打卡地点信息
@@ -188,10 +190,10 @@ def sqlconnect(datalist):
     for i in datalist:
         try:
             conn = psy.connect(host=host, user=user, password=password, port=port, database=dbname)
-            sqlcmd = "insert into poitb (createdtime,pageurl,mid,mblogtext,reposts,comments,attitudes,userid,usernick,userpageurl,userfans,userfollows,poimsg,poilg,poiwb,poitb,poiid,poiname,lat,lng) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqlcmd = "insert into poitb (createdtime,pageurl,mid,mblogtext,reposts,comments,attitudes,userid,usernick,userpageurl,userfans,userfollows,usergender,poimsg,poilg,poiwb,poitb,poiid,poiname,lat,lng) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cur = conn.cursor()
             params = (i['createdtim'],i['pagemsgurl'],i['mid'],i['mblogtext'],i['reposts_count'],i['comments_count'],i['attitudes_count'],i['userid']
-                      ,i['usernick'],i['userpage'],i['userfans'],i['userfollows'],i['poimsg'],i['poilg'],i['poiwb']
+                      ,i['usernick'],i['userpage'],i['userfans'],i['userfollows'],i['usergender'],i['poimsg'],i['poilg'],i['poiwb']
                       ,i['poitb'],i['poiid'],i['poiname'],i['poilat'],i['poilng'])
             cur.execute(sqlcmd, params)  # 执行sql语句
             conn.commit()

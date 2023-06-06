@@ -87,7 +87,7 @@ def getrespons(fullurl):
     # response = requests.get(url=fullurl, timeout=80, proxies=allprox)
 
     try:
-        response = requests.get(url=fullurl, timeout=15, proxies=allprox)
+        response = requests.get(url=fullurl, timeout=15)
         # response = requests.get(url=fullurl, timeout=80)
         # getuserhsty(response.json())
         return response
@@ -106,7 +106,7 @@ def getuserhsty(fullurl):
             msgdata = {'createdtim': '', 'pagemsgurl': '', 'mid': '', 'mblogtext': '', 'reposts_count': '',
                        'comments_count': '', 'attitudes_count': '',
                        'userid': '', 'usernick': '', 'userpage': '', 'userfans': '',
-                       'userfollows': '', 'poimsg': '', 'poilg': '',
+                       'userfollows': '','usergender':'', 'poimsg': '', 'poilg': '',
                        'poiwb': '', 'poitb': '', 'poiid': '', 'poiname': '', 'poilat': '', 'poilng': ''}
             mblog = i['mblog']
             # 发布时间
@@ -161,6 +161,8 @@ def getuserhsty(fullurl):
                 msgdata['userfans'] = userdata['followers_count']
                 # 用户关注数量
                 msgdata['userfollows'] = userdata['follow_count']
+                # 用户性别
+                msgdata['usergender'] = userdata['gender']
             except:
                 print(userdata)
             ###打卡地点信息
@@ -198,7 +200,7 @@ def getuserhsty(fullurl):
                     nn = 1
                     while 1:
                         try:
-                            response = requests.get(url=poimsgurl, timeout=15, proxies=allprox)
+                            response = requests.get(url=poimsgurl, timeout=15)
                             break
                         except:
                             nn += 1
@@ -248,10 +250,10 @@ def sqlconnect(datalist):
     for i in datalist:
         try:
             conn = psy.connect(host="localhost", user="postgres", password="root", port=5432, database="wbdb")
-            sqlcmd = "insert into usertb (createdtime,pageurl,mid,mblogtext,reposts,comments,attitudes,userid,usernick,userpageurl,userfans,userfollows,poimsg,poilg,poiwb,poitb,poiid,poiname,lat,lng) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sqlcmd = "insert into usertb (createdtime,pageurl,mid,mblogtext,reposts,comments,attitudes,userid,usernick,userpageurl,userfans,userfollows,usergender,poimsg,poilg,poiwb,poitb,poiid,poiname,lat,lng) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cur = conn.cursor()
             params = (i['createdtim'],i['pagemsgurl'],i['mid'],i['mblogtext'],i['reposts_count'],i['comments_count'],i['attitudes_count'],i['userid']
-                      ,i['usernick'],i['userpage'],i['userfans'],i['userfollows'],i['poimsg'],i['poilg'],i['poiwb']
+                      ,i['usernick'],i['userpage'],i['userfans'],i['userfollows'],i['usergender'],i['poimsg'],i['poilg'],i['poiwb']
                       ,i['poitb'],i['poiid'],i['poiname'],i['poilat'],i['poilng'])
             cur.execute(sqlcmd, params)  # 执行sql语句
             conn.commit()
@@ -266,8 +268,8 @@ def sqlconnect(datalist):
     print('成功存储'+str(n)+'条数据')
 
 if __name__ == '__main__':
-    getprox()
-    print(allprox)
+    # getprox()
+    # print(allprox)
     #获取全部用户id
     allidlist=getalluser()
     idhas=getalluserd()
