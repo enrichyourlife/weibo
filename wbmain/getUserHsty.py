@@ -1,4 +1,5 @@
 # coding: utf-8
+# -- coding: utf-8 --**
 import json
 import re
 from concurrent.futures import ThreadPoolExecutor
@@ -85,17 +86,72 @@ def thredg(datalist,thn,functionName):
 def getrespons(fullurl):
     # wbhoturl=fullurl
     # response = requests.get(url=fullurl, timeout=80, proxies=allprox)
-
+    cookies = {
+        'XSRF-TOKEN': 'NGwn_A0AD5Le-QomnMZ8Zd5I',
+        'SUB': '_2AkMT0d90f8NxqwFRmfkWy2vhaIV2ywHEieKljS6vJRMxHRl-yT9vqlRatRB6OFHxm48J734ar3cmDnfdV72f4v3cIGnI',
+        'SUBP': '0033WrSXqPxfM72-Ws9jqgMF55529P9D9WFFlrP74qVh8n-FXRO.jJaD',
+        'WBPSESS': 'HOKMwFaOhMG7Cl30d6Y-8U3ADf7JKUVle9dpRFLRvUaERJV9m8kjMbV9k2HbUU8HySgEvhkWBgnGP6do7b1vSay9L1i7GVRE-OhAFTZpldgljdqxNVP-98uWyiCAlzqK',
+    }
+    headers = {
+        'authority': 'weibo.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+        'cache-control': 'max-age=0',
+        'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Microsoft Edge";v="114"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'none',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51',
+    }
     try:
-        response = requests.get(url=fullurl, timeout=15)
-        # response = requests.get(url=fullurl, timeout=80)
-        # getuserhsty(response.json())
+        response = requests.get(url=fullurl, timeout=15, cookies=cookies,
+                                    headers=headers)
         return response
     except:
         print('网络连接超时')
 
 alldata=[]
+userMsg=[]
+def getUserDetil(userId):
+    global userMsg
+    cookies = {
+        'XSRF-TOKEN': 'NGwn_A0AD5Le-QomnMZ8Zd5I',
+        'SUB': '_2AkMT0d90f8NxqwFRmfkWy2vhaIV2ywHEieKljS6vJRMxHRl-yT9vqlRatRB6OFHxm48J734ar3cmDnfdV72f4v3cIGnI',
+        'SUBP': '0033WrSXqPxfM72-Ws9jqgMF55529P9D9WFFlrP74qVh8n-FXRO.jJaD',
+        'WBPSESS': 'HOKMwFaOhMG7Cl30d6Y-8U3ADf7JKUVle9dpRFLRvUaERJV9m8kjMbV9k2HbUU8HySgEvhkWBgnGP6do7b1vSay9L1i7GVRE-OhAFTZpldgljdqxNVP-98uWyiCAlzqK',
+    }
+    headers = {
+        'authority': 'weibo.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+        'cache-control': 'max-age=0',
+        'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Microsoft Edge";v="114"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'none',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51',
+    }
+    params = {
+        'uid': str(userId),
+    }
+    userResponse = requests.get('https://weibo.com/ajax/profile/detail', params=params, cookies=cookies, headers=headers)
+    # userurl='https://weibo.com/ajax/profile/detail?uid='+str(msgdata['userid'])
+    # userResponse = requests.get(url=userurl, timeout=15).json()
+    userMsg = userResponse.json()
+    print(userMsg)
+    # return userMsg
+
 def getuserhsty(fullurl):
+    global userMsg
+    # print('全局的',userMsg)
     jsondata=getrespons(fullurl).json()
     # counts = jsondata['data']['cardlistInfo']['total']  # 用户总微博数
     cards = jsondata['data']['cards']
@@ -107,7 +163,9 @@ def getuserhsty(fullurl):
                        'comments_count': '', 'attitudes_count': '',
                        'userid': '', 'usernick': '', 'userpage': '', 'userfans': '',
                        'userfollows': '','usergender':'', 'poimsg': '', 'poilg': '',
-                       'poiwb': '', 'poitb': '', 'poiid': '', 'poiname': '', 'poilat': '', 'poilng': ''}
+                       'poiwb': '', 'poitb': '', 'poiid': '', 'poiname': '', 'poilat': '', 'poilng': '',
+                       'usersunshinecredit':'','userbirthday':'','usercreatedtime':'','userdescription':'','userlocation':'','usereducation':'','useriplocation':'','userdesctext':''
+                       }
             mblog = i['mblog']
             # 发布时间
             try:
@@ -116,7 +174,7 @@ def getuserhsty(fullurl):
                 pass
             # 详情页url
             try:
-                msgdata['pagemsgurl'] = i['card_group'][0]['scheme']
+                msgdata['pagemsgurl'] = i['scheme']
             except:
                 pass
             # 微博内容唯一标识id  与详情页中的id匹配
@@ -148,9 +206,48 @@ def getuserhsty(fullurl):
             msgdata['attitudes_count'] = attitudes_count
             ####用户信息
             userdata = mblog['user']
+
             # 用户id
             try:
                 msgdata['userid'] = userdata['id']
+                try:
+                    # print('使用全局的',userMsg)
+                    try:
+                        msgdata['usersunshinecredit'] =userMsg['data']['sunshine_credit']['level']
+                    except:
+                        pass
+                    try:
+                        msgdata['userbirthday'] =userMsg['data']['birthday']
+                    except:
+                        pass
+                    try:
+                        msgdata['usercreatedtime'] =userMsg['data']['created_at']
+                    except:
+                        pass
+                    try:
+                        msgdata['userdescription'] =userMsg['data']['description']
+                    except:
+                        pass
+                    try:
+                        msgdata['userlocation'] =userMsg['data']['location']
+                    except:
+                        pass
+                    try:
+                        msgdata['usereducation'] =userMsg['data']['education']['school']
+                    except:
+                        pass
+                    try:
+                        msgdata['useriplocation'] =userMsg['data']['ip_location']
+                    except:
+                        pass
+                    try:
+                        msgdata['userdesctext'] =userMsg['data']['desc_text']
+                    except:
+                        pass
+                    print(userMsg)
+                except Exception as e:
+                    print(e)
+                    pass
                 # 用户名称
                 msgdata['usernick'] = userdata['screen_name']
                 # 用户主页url
@@ -164,6 +261,7 @@ def getuserhsty(fullurl):
                 # 用户性别
                 msgdata['usergender'] = userdata['gender']
             except:
+                print('错误')
                 print(userdata)
             ###打卡地点信息
             try:
@@ -177,7 +275,13 @@ def getuserhsty(fullurl):
             except:
                 pass
             #判断是否为签到打卡地点，仅保留地点类数据
-            if poi['type']=='place':
+            thisFlag=''
+            try:
+                if poi['type'] == 'place':
+                    thisFlag=True
+            except:
+                thisFlag=False
+            if thisFlag:
                 try:
                     msgdata['poilg'] = re.findall('(\d+)人来过', poimsg2)[0]
                     msgdata['poiwb'] = re.findall('(\d+)条微博', poimsg2)[0]
@@ -250,11 +354,14 @@ def sqlconnect(datalist):
     for i in datalist:
         try:
             conn = psy.connect(host="localhost", user="postgres", password="root", port=5432, database="wbdb")
-            sqlcmd = "insert into usertb (createdtime,pageurl,mid,mblogtext,reposts,comments,attitudes,userid,usernick,userpageurl,userfans,userfollows,usergender,poimsg,poilg,poiwb,poitb,poiid,poiname,lat,lng) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+            sqlcmd = "insert into usertb (createdtime,pageurl,mid,mblogtext,reposts,comments,attitudes,userid,usernick,userpageurl,userfans,userfollows,usergender,poimsg,poilg,poiwb,poitb,poiid,poiname,lat,lng,usersunshinecredit,userbirthday,usercreatedtime,userdescription,userlocation,usereducation,useriplocation,userdesctext) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cur = conn.cursor()
             params = (i['createdtim'],i['pagemsgurl'],i['mid'],i['mblogtext'],i['reposts_count'],i['comments_count'],i['attitudes_count'],i['userid']
                       ,i['usernick'],i['userpage'],i['userfans'],i['userfollows'],i['usergender'],i['poimsg'],i['poilg'],i['poiwb']
-                      ,i['poitb'],i['poiid'],i['poiname'],i['poilat'],i['poilng'])
+                      ,i['poitb'],i['poiid'],i['poiname'],i['poilat'],i['poilng'],
+                      i['usersunshinecredit'],i['userbirthday'],i['usercreatedtime'],i['userdescription'],i['userlocation'],i['usereducation'],i['useriplocation'],i['userdesctext'],
+                      )
             cur.execute(sqlcmd, params)  # 执行sql语句
             conn.commit()
             cur.close()
@@ -276,21 +383,26 @@ if __name__ == '__main__':
     ret = list(set(allidlist) ^ set(idhas))
     print('共'+str(len(ret))+'位用户准备获取')
     #依次获取每个用户的全部微博数据
-    for i in allidlist:
+    for i in ret:
+        if i=='':
+            continue
+        # global userMsg
+        # userMsg=[]
         alldata = []
         #每次更换用户就重新清空list
         try:
+            getUserDetil(i)
             userurl='https://m.weibo.cn/api/container/getIndex?containerid=107603'+str(i)+'&count=25&page='
-            counts=getcounts(getrespons(userurl).json())
-            try:
-                pages=math.ceil(counts/25) #计算总页数
-            except:
-                pages=2
-            if pages>50:
-                pages=50
+            # counts=getcounts(getrespons(userurl).json())
+            # try:
+            #     pages=math.ceil(counts/25) #计算总页数
+            # except:
+            #     pages=2
+            # if pages>50:
+            #     pages=50
             allurl=[]
-            print('该用户共'+str(pages)+'页微博')
-            for p in range(1,pages):
+            # print('该用户共'+str(pages)+'页微博')
+            for p in range(1,50):
                 pageurl=userurl+str(p)
                 allurl.append(pageurl)
             #多线程获取该用户的历史微博 页
@@ -300,5 +412,5 @@ if __name__ == '__main__':
             sqlconnect(alldata)
         except:
             sqlconnect(alldata)
-            time.sleep(10)
-            getprox()
+            # time.sleep(5)
+            # getprox()
